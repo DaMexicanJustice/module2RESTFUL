@@ -1,3 +1,7 @@
-rest\QuoteResource$1.class
-rest\ApplicationConfig.class
+exception\ErrorMessage.class
 rest\QuoteResource.class
+rest\ApplicationConfig.class
+exception\GenericExceptionMapper.class
+exception\QuoteNotFoundException.class
+exception\QuoteNotFoundMapper.class
+rest\QuoteResource$1.class

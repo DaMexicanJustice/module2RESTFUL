@@ -6,15 +6,16 @@
 package rest;
 
 import com.google.gson.Gson;
+import exception.QuoteNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javax.json.Json;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -52,7 +53,6 @@ public class QuoteResource {
 
     /**
      * Retrieves representation of an instance of exercises.module3restful.GenericResource
-     * @param id
      * @return an instance of java.lang.String
      */
     @GET
@@ -63,18 +63,21 @@ public class QuoteResource {
     @GET
     @Path("random")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getRandom() {
+    public String getRandom() throws QuoteNotFoundException {
         //TODO return proper representation object
         Random rand = new Random();
+        if (quotes.isEmpty()) throw new QuoteNotFoundException("No quotes created");
         return quotes.get(rand.nextInt(6)+1);
     }
     
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getById(@PathParam("id") int id) {
+    public String getById(@PathParam("id") int id) throws QuoteNotFoundException, Exception {
         //TODO return proper representation object
         String str = quotes.get(id);
+        if (quotes.isEmpty()) throw new QuoteNotFoundException("No quotes created");
+        if (str == null) throw new QuoteNotFoundException("Quote with requested id not found");
         String jsonQuote = gson.toJson(str);
         return jsonQuote;
     }
@@ -84,12 +87,13 @@ public class QuoteResource {
 //    public void changeQuote(String msg, int id) {
 //        quotes.replace(id, msg);
 //    }
-//    
+    
     @DELETE
     @Path("{id}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
-    public String deleteQuote(@PathParam("id") int id) {
+    public String deleteQuote(@PathParam("id") int id) throws QuoteNotFoundException {
+        if (quotes.get(id) == null) throw new QuoteNotFoundException("Quote with requested id not found");
         quotes.remove(id);
         return "We deleted quote with id: " + String.valueOf(id);
     }
