@@ -104,7 +104,7 @@ public class QuoteResource {
      * @return  
      */
     @PUT
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String makeQuote(String msg) {
         int newId = quotes.size()+1;

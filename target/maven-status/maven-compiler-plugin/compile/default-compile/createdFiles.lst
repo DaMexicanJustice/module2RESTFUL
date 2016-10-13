@@ -1,4 +1,3 @@
-exception\ErrorMessage.class
 rest\QuoteResource.class
 rest\ApplicationConfig.class
 exception\GenericExceptionMapper.class

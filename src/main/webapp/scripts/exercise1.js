@@ -71,7 +71,7 @@ function deleteQuote() {
 }
 
 function addQuote() {
-    var query = JSON.stringify({quote: $("#qmsg").val()});
+    var query = JSON.stringify($("#qmsg").val());
     $("qcontainer").html("");
     $.ajax({
         type: 'PUT',

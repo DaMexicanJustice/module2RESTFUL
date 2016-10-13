@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html ng-app="myApp" ng-controller="myControl as ctrl">
+    <head>
+        <title>Angular Day 3</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular-route.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    </head>
+    <body>
+        <nav id='menu' class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div class="navbar-brand">Angular Day3 Ex 1</div>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#/home">Home</a></li>
+                    <li><a ng-click="ctrl.randomQuote()" href="#/random">New Random Quote</a></li> 
+                    <li><a ng-click="ctrl.getById(getId)" href="#/getbyid">New Quote By ID</a><input ng-model="getId" type="text" id="getbyid" style="width:20px; margin-left:50px"></li> 
+                    <li><a ng-click="ctrl.delById(delId)" href='#/delbyid'>Delete Quote With ID</a><input ng-model="delId" type="text" id="del" style="width:20px; margin-left:50px"></li>
+                    <li><a href='#/add'>Add new quote</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div id="tester">
+<!--            test: {{ctrl.message}}
+            <br>
+            randomQuote: {{ctrl.quote}}
+            <br>-->
+        </div>
+
+        <div ng-view=""></div>
+
+
+        <script>
+                    var app = angular.module("myApp", ['ngRoute']);
+                    app.controller('myControl', ['$http', function ($http) {
+                            var self = this;
+                            self.message = "We have access to our angular module";
+                            self.url = "http://localhost:8084/module2RESTFUL/api/quote/";
+                            self.randomQuote = function () {
+                                $http.get(self.url + 'random').then(function (response) {
+                                    self.quote = response.data;
+                                }, function (error) {
+                                    self.quote = error.msg;
+                                });
+                            };
+                            
+                            self.getById = function (id) {
+                                $http.get(self.url + id).then(function (response) {
+                                    console.log(response);
+                                    console.log(response.data);
+                                    self.quote = response.data;
+                                }, function (error) {
+                                    self.quote = error.data.msg;
+                                });
+                            };
+                            
+                            self.delById = function (id) {
+                                $http.delete(self.url + id).then(function (response) {
+                                    self.quote = response.data;
+                                }, function (error) {
+                                    self.quote = error.data.msg;
+                                });
+                            };
+                            
+                            self.addQuote = function (quote) {
+                                $http.put(self.url, quote).then(function (response) {
+                                    self.success = response.data;
+                                }, function (error) {
+                                    self.quote = error.data.msg;
+                                });
+                            };
+                            
+                            self.changemsg = function () {
+                                self.message = "Hello and good day";
+                            };
+                            self.randomQuote();
+                        }]);
+        </script>
+        <script>
+                    app.config(['$routeProvider', function ($routeProvider) {
+                            $routeProvider
+                                    .when('/random', {
+                                        template: '{{ctrl.quote}}',
+                                        controllerAs: 'myControl'
+                                    })
+                                    .when('/getbyid', {
+                                        template: '{{ctrl.quote}}',
+                                        controllerAs: 'myControl'
+                                    })
+                                    .when('/delbyid', {
+                                        template: '{{ctrl.quote}}',
+                                        controllerAs: 'myControl'
+                                    }).when('/add', {
+                                        template: '<input type="text" placeholder="your quote..." ng-model="newquote"> <input value="Submit" type="button" ng-click="ctrl.addQuote(newquote)"></input> <br> {{ctrl.success}}</input>',
+                                        controllerAs: 'myControl'
+                                    });
+                                    
+                        }]);
+        </script>
+
+    </body>
+</html>
